@@ -43,7 +43,7 @@ namespace ORM_Dapper
                 Console.WriteLine($"{dept.DepartmentID} {dept.Name}");
             }   
 
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             //Calling the GetAllProducts and CreateProduct Methods
             //then printing to the console using user input.
@@ -97,6 +97,28 @@ namespace ORM_Dapper
                 Console.WriteLine($" {prod.Name}, ${prod.Price}, & {prod.CategoryID}");
             }
 
+            Console.WriteLine("Let's update a product.");
+
+            bool actualProdID;
+            int prodID;
+
+            do
+            {
+                Console.WriteLine("What is the ProductID that you want to update?");
+                actualProdID = int.TryParse(Console.ReadLine(), out prodID);
+                if (!actualProdID)
+                {
+                    Console.WriteLine("That is not a number. Please try again using just numbers.");
+                }
+
+            } while (!actualProdID);
+
+            Console.WriteLine("What is the new product name?");
+            var newName = Console.ReadLine();
+
+            repoProd.UpdateProduct(prodID, newName);
+
+            Console.WriteLine($"{prodID}, {newName}"); 
 
             Console.WriteLine("Thank you for your time! Have a great day!"); 
 

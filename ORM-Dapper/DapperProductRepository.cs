@@ -25,8 +25,12 @@ namespace ORM_Dapper
              new { name , price , categoryID });
         }
 
+        public void UpdateProduct(int productID, string updatedName)
+        {
+            _connection.Execute("UPDATE products SET Name = @updatedName WHERE productID = @productID;",
+                new { updatedName = updatedName, productID = productID });
 
-
+        }
     }
 }
 
