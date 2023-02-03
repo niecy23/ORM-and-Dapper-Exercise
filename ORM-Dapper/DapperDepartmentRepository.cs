@@ -5,7 +5,7 @@ using Dapper;
 namespace ORM_Dapper
 {
 	public class DapperDepartmentRepository : IDepartmentRepository
-	{
+    {
         private readonly IDbConnection _connection;
 
         //Constructor
@@ -24,6 +24,7 @@ namespace ORM_Dapper
             _connection.Execute("INSERT INTO DEPARTMENTS (Name) VALUES (@departmentName);",
              new { departmentName = newDepartmentName });
         }
+
     }
 }
 
