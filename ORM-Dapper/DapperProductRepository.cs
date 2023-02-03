@@ -29,7 +29,16 @@ namespace ORM_Dapper
         {
             _connection.Execute("UPDATE products SET Name = @updatedName WHERE productID = @productID;",
                 new { updatedName = updatedName, productID = productID });
+        }
 
+        public void DeleteProduct(int productID)
+        {
+            _connection.Execute("DELETE FROM products WHERE ProductID = @productID;",
+                new { productID = productID });
+            _connection.Execute("DELETE FROM sales WHERE ProductID = @productID;",
+            new { productID = productID });
+            _connection.Execute("DELETE FROM reviews WHERE ProductID = @productID;",
+            new { productID = productID });
         }
     }
 }

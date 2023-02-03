@@ -9,6 +9,8 @@ namespace ORM_Dapper
 
         public void UpdateProduct(int productID, string updatedName);
 
+        public void DeleteProduct(int productID);
+
     }
 }
 

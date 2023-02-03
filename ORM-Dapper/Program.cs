@@ -91,11 +91,9 @@ namespace ORM_Dapper
             repoProd.CreateProduct(newProductName, newProductPrice, newProductCID);
             products = repoProd.GetAllProducts();
 
-            Console.WriteLine("Here is the list of products again with your new product added."); 
-            foreach (var prod in products)
-            {
-                Console.WriteLine($" {prod.Name}, ${prod.Price}, & {prod.CategoryID}");
-            }
+            Console.WriteLine("Here is your new product."); 
+            Console.WriteLine($" {newProductName}, ${newProductPrice}, & {newProductCID}");
+            
 
             Console.WriteLine("Let's update a product.");
 
@@ -118,7 +116,24 @@ namespace ORM_Dapper
 
             repoProd.UpdateProduct(prodID, newName);
 
-            Console.WriteLine($"{prodID}, {newName}"); 
+            Console.WriteLine($"That was ProductID: {prodID} New Name: {newName}.");
+
+            Console.WriteLine("Let's try deleting a product.");
+
+            do
+            {
+                Console.WriteLine("What is the ProductID that you want to delete?");
+                actualProdID = int.TryParse(Console.ReadLine(), out prodID);
+                if (!actualProdID)
+                {
+                    Console.WriteLine("That is not a number. Please try again using just numbers.");
+                }
+
+            } while (!actualProdID);
+
+            repoProd.DeleteProduct(prodID);
+
+            Console.WriteLine($"ProductID: {prodID} was deleted.");
 
             Console.WriteLine("Thank you for your time! Have a great day!"); 
 
