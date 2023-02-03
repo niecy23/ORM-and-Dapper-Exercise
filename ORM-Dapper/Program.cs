@@ -30,90 +30,18 @@ namespace ORM_Dapper
                 Console.WriteLine($"{dept.DepartmentID} {dept.Name}"); 
             }
 
-            Console.WriteLine($"Would you like to add a new Department: Yes or No?");
-            var addDept = Console.ReadLine();
+            Console.WriteLine("Add/Type a new Department Name.");
+            var newDept = Console.ReadLine();
 
-            bool addingDept = true;
+            repoDept.InsertDepartment(newDept);
+            departments = repoDept.GetAllDepartments();
 
-            bool no = true;
+            Console.WriteLine("Here is the list of Departments again with your new Department added.");
 
-            while (addingDept)
+            foreach (var dept in departments)
             {
-                if (addDept == null || addDept == "")
-                {
-                    Console.WriteLine("Please try again.");
-                    Console.WriteLine("Would you like to add a new Department: Yes or No?");
-                    addDept = Console.ReadLine();
-
-                    if (addDept.ToLower() == "yes")
-                    {
-                        addingDept = false;
-                    }
-                    else if (addDept.ToLower() == "no")
-                    {
-                        no = false;
-                        continue;
-                    }
-                    else
-                    {
-                        addingDept = true;
-                    }
-
-                }
-
-                while (no)
-                {
-                    Console.WriteLine("Add/Type a new Department Name.");
-                    var newDept = Console.ReadLine();
-
-                    while (!addingDept)
-                    {
-                        if (newDept == null || newDept == "")
-                        {
-                            Console.WriteLine("Please try again.");
-                            Console.WriteLine("Add/Type a new Department Name.");
-                            newDept = Console.ReadLine();
-                        }
-
-                        repoDept.InsertDepartment(newDept);
-                        departments = repoDept.GetAllDepartments();
-
-                        Console.WriteLine("Here is the list of Departments again with your new Department added.");
-
-                        foreach (var dept in departments)
-                        {
-                            Console.WriteLine($"{dept.DepartmentID} {dept.Name}");
-                        }   
-
-                        Console.WriteLine("Would you like to add another Department: Yes or No?");
-                        addDept = Console.ReadLine();
-
-                        if (addDept == null || addDept == "")
-                        { 
-                            Console.WriteLine("Please try again.");
-                            Console.WriteLine("Would you like to add a another Department: Yes or No?");
-                            addDept = Console.ReadLine();
-
-                            if (addDept.ToLower() == "yes")
-                            {
-                                addingDept = true;
-                            }
-                            else if (addDept.ToLower() == "no")
-                            {
-                                no = false;
-                                continue;
-                            }
-                            else
-                            {
-                                addingDept = true;
-                            }
-                        }
-                    }
-                       
-                }
-            }
-
-            
+                Console.WriteLine($"{dept.DepartmentID} {dept.Name}");
+            }   
 
             Thread.Sleep(500);
 
@@ -129,113 +57,46 @@ namespace ORM_Dapper
                 Console.WriteLine($" {prod.Name}, ${prod.Price}, & {prod.CategoryID}");
             }
 
-            //Some nested loops, null checks, and even a little TryParse action to have a little fun with adding a product.
-            bool newProduct = true;
-            bool anotherProduct;
+            Console.WriteLine("Let's add a product. What is the product's name?");
+            var newProductName = Console.ReadLine();
 
-            Console.WriteLine("Would you like to add a product: Yes or No?");
-            var addProduct = Console.ReadLine();
-
-            if (addProduct == null)
-            {
-                do
-                {
-                    Console.WriteLine("Please try again.");
-                    Console.WriteLine("Would you like to add a product: Yes or No?");
-                    addProduct = Console.ReadLine();
-
-                } while (addProduct == null); 
-            } 
-            
-            else if (addProduct.ToLower() == "yes")
-            {
-                newProduct = true;
-            }   
-            else
-            {
-                newProduct = false;
-            }
+            bool actualDouble;
+            double newProductPrice;
 
             do
             {
-                do
+                Console.WriteLine("What is the price of the product?");
+                actualDouble = double.TryParse(Console.ReadLine(), out newProductPrice);
+                if (!actualDouble)
                 {
-                    Console.WriteLine("Add/Type a new Product starting with the Product Name.");
-                    var newProductName = Console.ReadLine();
+                    Console.WriteLine("That is not a number. Please try again using numbers in this format: 00.00");
+                }
 
-                    if (newProductName == null || newProductName == "")
-                    {
-                        do
-                        {
-                            Console.WriteLine("Please try again.");
-                            Console.WriteLine("Would you like to add a product: Yes or No?");
-                            newProductName = Console.ReadLine();
+             } while (!actualDouble);
 
-                        } while (newProductName == null);
-                    }
+             bool actualInt;
+             int newProductCID;
 
-                    bool actualDouble;
-                    double newProductPrice;
+            do
+            {
+                Console.WriteLine("What is the Category ID of the product (1-10)?");
+                actualInt = int.TryParse(Console.ReadLine(), out newProductCID);
+                if (!actualInt)
+                {
+                    Console.WriteLine("That is not a number. Please try again using just numbers.");
+                }
 
-                    do
-                    {
-                        Console.WriteLine("What is the price of the product?");
-                        actualDouble = double.TryParse(Console.ReadLine(), out newProductPrice);
-                        Console.WriteLine("That is not a number. Please try again using numbers in this format: 00.00");
+            } while (!actualInt);
 
-                    } while (!actualDouble);
+            repoProd.CreateProduct(newProductName, newProductPrice, newProductCID);
+            products = repoProd.GetAllProducts();
 
-                    bool actualInt;
-                    int newProductCID;
+            Console.WriteLine("Here is the list of products again with your new product added."); 
+            foreach (var prod in products)
+            {
+                Console.WriteLine($" {prod.Name}, ${prod.Price}, & {prod.CategoryID}");
+            }
 
-                    do
-                    {
-                        Console.WriteLine("What is the Category ID of the product (1-10)?");
-                        actualInt = int.TryParse(Console.ReadLine(), out newProductCID);
-                        if (actualInt == false)
-                        {
-                            Console.WriteLine("That is not a number. Please try again using just numbers.");
-                        }
-
-                    } while (!actualInt);
-
-
-
-                    repoProd.CreateProduct(newProductName, newProductPrice, newProductCID);
-                    products = repoProd.GetAllProducts();
-
-                    Console.WriteLine("Here is the list of products again with your new product added."); 
-                    foreach (var prod in products)
-                    {
-                        Console.WriteLine($" {prod.Name}, {prod.Price}, & {prod.CategoryID}");
-                    }
-
-                    Console.WriteLine("Would you like to add another product: Yes or No?");
-                    addProduct = Console.ReadLine();
-
-                    if (addProduct == null)
-                    {
-                        do
-                        {
-                            Console.WriteLine("Please try again.");
-                            Console.WriteLine("Would you like to add another product: Yes or No?");
-                            addProduct = Console.ReadLine();
-
-                        } while (addProduct == null);
-                    }
-
-                    if (addProduct.ToLower() == "yes")
-                    {
-                        anotherProduct = true;
-                    }
-                    else
-                    {
-                        anotherProduct = false;
-                    }
-
-                } while (anotherProduct);
-
-            } while (newProduct);
 
             Console.WriteLine("Thank you for your time! Have a great day!"); 
 
